@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient'
 
 function Login() {
@@ -7,35 +7,38 @@ function Login() {
   const [step, setStep] = useState(1) // 1: enter email, 2: verify OTP
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [helpOpen, setHelpOpen] = useState(false)
+
+  const normalizedEmail = email.trim().toLowerCase()
+
+  // Close modal on Esc
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') setHelpOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   const handleRequestOTP = async (e) => {
-    e.preventDefault()
+    if (e) e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
-      // Step 1: Check if email is whitelisted
       const { data: isAllowed, error: checkError } = await supabase
-        .rpc('is_email_allowed', { e: email.toLowerCase() })
-
-      if (checkError) {
-        throw checkError
-      }
+        .rpc('is_email_allowed', { e: normalizedEmail })
+      if (checkError) throw checkError
 
       if (!isAllowed) {
-        setError('You are not authorized.')
-        setLoading(false)
+        setError('You don’t have permission to access this resource.')
         return
       }
 
-      // Step 2: Send OTP
       const { error: otpError } = await supabase.auth.signInWithOtp({
-        email: email.toLowerCase(),
-        options: {
-          shouldCreateUser: true
-        }
+        email: normalizedEmail,
+        options: { shouldCreateUser: true }
       })
-
       if (otpError) throw otpError
 
       setStep(2)
@@ -54,40 +57,31 @@ function Login() {
 
     try {
       const { error: verifyError } = await supabase.auth.verifyOtp({
-        email: email.toLowerCase(),
+        email: normalizedEmail,
         token: otpCode,
         type: 'email'
       })
-
       if (verifyError) throw verifyError
 
-      // Get session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      
       if (sessionError) throw sessionError
       if (!session) throw new Error('No session created')
 
-      // Ensure profile exists
+      // best-effort helpers
       const { error: profileError } = await supabase.rpc('ensure_profile')
-      if (profileError) {
-        console.error('Error ensuring profile:', profileError)
-      }
+      if (profileError) console.error('ensure_profile:', profileError)
 
-      // Log login activity
       const { error: logError } = await supabase.rpc('log_login', {
         p_session_id: session.access_token,
         p_user_agent: navigator.userAgent
       })
+      if (logError) console.error('log_login:', logError)
 
-      if (logError) {
-        console.error('Error logging login:', logError)
-      }
-
-      // Redirect handled by App.jsx
       window.location.href = '/chat'
     } catch (err) {
       console.error('Error verifying OTP:', err)
-      if (err.message.includes('expired') || err.message.includes('invalid')) {
+      const msg = (err.message || '').toLowerCase()
+      if (msg.includes('expired') || msg.includes('invalid')) {
         setError('Invalid or expired code. Please try again.')
       } else {
         setError(err.message || 'Failed to verify code')
@@ -98,91 +92,191 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">Charly</h1>
-        
-        {step === 1 ? (
-          <form onSubmit={handleRequestOTP} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="you@example.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            {error && (
-              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
-                {error}
+    <div className="min-h-screen w-full bg-white">
+      <div className="relative flex min-h-screen">
+        {/* LEFT: use SECONDARY (dark shades in your scale) */}
+        <div className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12
+                        bg-gradient-to-br from-secondary-300 via-secondary-200 to-secondary-100 text-white">
+          {/* Logo (as-is) */}
+          <div>
+            <img
+              src="https://creativefuel.io/assets/imgs/logo/logo-dark.svg"
+              alt="Creative Fuel Logo"
+              className="w-120 h-auto"
+            />
+          </div>
+
+          {/* Welcome */}
+          <div className="space-y-6">
+          <h1 className="text-5xl leading-tight drop-shadow-sm">
+  <span>Welcome to </span>
+  <span className="font-brittany">Charly</span>
+</h1>
+
+            <p className="text-white/90 text-lg leading-relaxed max-w-md">
+              Your creative partner at work.
+Discover AI-powered tools, automation, and training resources
+that help you think bigger and achieve more.
+            </p>
+          </div>
+
+          <div className="text-white/70 text-sm">
+            © 2025 Charly. All rights reserved.
+          </div>
+        </div>
+
+        {/* RIGHT: form card */}
+        <div className="w-full lg:w-7/12 flex items-center justify-center p-6 sm:p-8">
+          <div className="w-full max-w-md">
+            <h2 className="text-5xl leading-tight drop-shadow-sm mb-6">
+              <span>Sign in to </span>
+              <span className="font-brittany text-4.6xl text-primary font-black align-baseline">Charly</span>
+            </h2>
+
+            <div className="bg-white/95 backdrop-blur rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+              <form onSubmit={step === 1 ? handleRequestOTP : handleVerifyOTP} className="space-y-6">
+                {/* Email */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="you@example.com"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400
+                               focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
+                    autoComplete="email"
+                    inputMode="email"
+                  />
+                </div>
+
+                {/* OTP step */}
+                {step === 2 && (
+                  <div>
+                    <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
+                      Enter 6-digit code
+                    </label>
+                    <input
+                      id="otp"
+                      type="text"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      required
+                      maxLength={6}
+                      placeholder="000000"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 text-center text-2xl tracking-widest
+                                 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      We sent a code to <span className="font-medium">{normalizedEmail}</span>.{" "}
+                      <button
+                        type="button"
+                        onClick={handleRequestOTP}
+                        disabled={loading || !normalizedEmail}
+                        className="underline hover:no-underline text-accent-500 disabled:text-gray-400"
+                      >
+                        Resend
+                      </button>
+                    </p>
+                  </div>
+                )}
+
+                {/* Error */}
+                {error && (
+                  <div className="text-red-700 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
+                    {error}
+                  </div>
+                )}
+
+                {/* Actions */}
+                {step === 2 ? (
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => { setStep(1); setOtpCode(''); setError('') }}
+                      disabled={loading}
+                      className="flex-1 py-3 px-4 rounded-lg border border-gray-300 bg-white text-gray-800
+                                 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed transition font-medium"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={loading || otpCode.length !== 6}
+                      className="flex-1 py-3 px-4 rounded-lg bg-secondary-500 text-white shadow-lg border border-secondary-400
+                                 hover:bg-secondary-400 focus:outline-none focus:ring-2 focus:ring-accent
+                                 disabled:opacity-60 disabled:cursor-not-allowed transition font-medium"
+                    >
+                      {loading ? 'Verifying…' : 'Verify'}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={loading || !normalizedEmail}
+                    className="w-full py-3 px-4 rounded-lg bg-secondary-300 text-white shadow-lg border border-secondary-400
+                               hover:bg-secondary-100 focus:outline-none focus:ring-2 focus:ring-accent
+                               disabled:opacity-60 disabled:cursor-not-allowed transition font-medium"
+                  >
+                    {loading ? 'Sending…' : 'Send OTP Code'}
+                  </button>
+                )}
+              </form>
+
+              {/* Replaced terms line with Help button */}
+              <div className="mt-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setHelpOpen(true)}
+                  className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50
+                             focus:outline-none focus:ring-2 focus:ring-accent text-sm font-medium"
+                >
+                  Help
+                </button>
               </div>
-            )}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Sending...' : 'Send OTP Code'}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOTP} className="space-y-4">
-            <div>
-              <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
-                Enter 6-digit code
-              </label>
-              <input
-                id="otp"
-                type="text"
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                required
-                maxLength={6}
-                placeholder="000000"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-2xl tracking-widest"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                Check your email for the verification code
-              </p>
             </div>
-            {error && (
-              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
-                {error}
-              </div>
-            )}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setStep(1)
-                  setOtpCode('')
-                  setError('')
-                }}
-                disabled={loading}
-                className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
-              >
-                Back
-              </button>
-              <button
-                type="submit"
-                disabled={loading || otpCode.length !== 6}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Verifying...' : 'Verify'}
-              </button>
-            </div>
-          </form>
-        )}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="hidden lg:block absolute left-[41.6667%] top-0 bottom-0 w-px bg-gray-200" />
       </div>
+
+      {/* HELP MODAL */}
+      {helpOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={() => setHelpOpen(false)}
+          aria-modal="true"
+          role="dialog"
+        >
+          {/* stop click from closing when clicking inside the card */}
+          <div
+            className="w-full max-w-md mx-4 rounded-2xl bg-white shadow-xl border border-gray-200 p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              aria-label="Close help"
+              onClick={() => setHelpOpen(false)}
+              className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full
+                         border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-accent"
+            >
+              
+            </button>
+
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Help</h3>
+            <p className="text-gray-600">hii how can i help you</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 export default Login
-
