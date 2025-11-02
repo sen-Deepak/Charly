@@ -7,6 +7,7 @@ import Chat from './pages/Chat'
 import Profile from './pages/Profile'
 import Reporting from './pages/Reporting'
 import Training from './pages/Training'
+import HRDonna from './pages/HRDonna'
 
 function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true)
@@ -65,6 +66,7 @@ function App() {
           <Route index element={<Navigate to="/chat" replace />} />
           <Route path="chat" element={<Chat />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="hr-donna" element={<HRDonna />} />
           <Route path="reporting" element={<Reporting />} />
           <Route path="training" element={<Training />} />
         </Route>
