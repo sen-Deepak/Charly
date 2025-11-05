@@ -1,0 +1,5 @@
+how to add new user-
+1. Add email ,name ,position in allowed user table-
+2. add email in authentication.
+
+-------------------------------------------------------

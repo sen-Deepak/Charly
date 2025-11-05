@@ -97,12 +97,12 @@ function Login() {
         {/* LEFT: use SECONDARY (dark shades in your scale) */}
         <div className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12
                         bg-gradient-to-br from-secondary-300 via-secondary-200 to-secondary-100 text-white">
-          {/* Logo (as-is) */}
-          <div>
+          {/* Logo (top-left) */}
+          <div className="self-start">
             <img
-              src="https://creativefuel.io/assets/imgs/logo/logo-dark.svg"
+              src="full white logo.png"
               alt="Creative Fuel Logo"
-              className="w-120 h-auto"
+              className="w-32 sm:w-40 md:w-44 h-auto object-contain"
             />
           </div>
 
