@@ -70,41 +70,45 @@ function DashboardLayout() {
   const isActive = (path) => location.pathname === path
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex overflow-hidden">
       {/* Sidebar */}
       <aside
-        className={`flex flex-col transition-all duration-300 ease-in-out ${
+        className={`flex flex-col transition-all duration-300 ease-in-out fixed h-screen ${
           expanded ? 'w-64' : 'w-20'
         } bg-gradient-to-br from-secondary-300 via-secondary-200 to-secondary-100 text-white`}
       >
-        <div
-          className={`p-4 border-b border-white/10 flex items-center justify-center cursor-pointer select-none hover:bg-white/5 transition-colors`}
-          onClick={() => setExpanded((s) => !s)}
-          title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
-        >
-          {/* Charly title (match Login style) - centered and white */}
-          <div className="flex items-center justify-center">
-            <span className="inline-block text-white font-brittany font-black align-baseline" style={{ lineHeight: 1 }}>
-              {expanded ? (
-                <span className="text-2xl">Charly</span>
-              ) : (
-                <span className="text-2xl">C</span>
-              )}
-            </span>
-          </div>
-        </div>
-
-        {/* Profile brief */}
-        <div className={`p-4 transition-opacity duration-300 ${expanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-          <div className="text-sm text-white/90 flex flex-col items-center text-center">
-            <div className="text-lg text-white font-medium">
-              {profileLoading ? 'Loading...' : `Hi, ${profile.full_name ? profile.full_name.split(' ')[0] : 'User'}`}
+        {/* Fixed top section */}
+        <div className="flex-shrink-0">
+          <div
+            className={`p-4 border-b border-white/10 flex items-center justify-center cursor-pointer select-none hover:bg-white/5 transition-colors`}
+            onClick={() => setExpanded((s) => !s)}
+            title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
+          >
+            {/* Charly title (match Login style) - centered and white */}
+            <div className="flex items-center justify-center">
+              <span className="inline-block text-white font-brittany font-black align-baseline" style={{ lineHeight: 1 }}>
+                {expanded ? (
+                  <span className="text-2xl">Charly</span>
+                ) : (
+                  <span className="text-2xl">C</span>
+                )}
+              </span>
             </div>
-            <div className="text-sm text-white/80">{profile.position || '—'}</div>
+          </div>
+
+          {/* Profile brief */}
+          <div className={`p-4 transition-opacity duration-300 ${expanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
+            <div className="text-sm text-white/90 flex flex-col items-center text-center">
+              <div className="text-lg text-white font-medium">
+                {profileLoading ? 'Loading...' : `Hi, ${profile.full_name ? profile.full_name.split(' ')[0] : 'User'}`}
+              </div>
+              <div className="text-sm text-white/80">{profile.position || '—'}</div>
+            </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-2 flex flex-col gap-1">
+        {/* Scrollable navigation */}
+        <nav className="flex-1 p-2 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
           {[
             { to: '/profile', label: 'Profile', icon: (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,11 +170,28 @@ function DashboardLayout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto transition-all duration-300">
+      <main className={`flex-1 overflow-y-auto transition-all duration-300 ${expanded ? 'ml-64' : 'ml-20'}`}>
         <div className="max-w-6xl mx-auto p-6 sm:p-8">
           <Outlet />
         </div>
       </main>
+      <style>
+        {`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+        `}
+      </style>
     </div>
   )
 }
