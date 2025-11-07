@@ -1,7 +1,7 @@
 const API_CONFIG = {
     // Use environment variables with fallback values
     N8N_BASE_URL: import.meta.env.VITE_N8N_BASE_URL || 'http://localhost:5678',
-    HR_DONNA_WEBHOOK: '/webhook-test/hrdonna',
+    HR_DONNA_WEBHOOK: '/webhook/hrdonna',
     TIMEOUT_MS: 30000, // 30 seconds timeout
 };
 
