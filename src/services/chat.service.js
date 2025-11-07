@@ -1,0 +1,87 @@
+import API_CONFIG from '../config/api.config';
+import { parseApiResponse, getErrorMessage, ResponseStatus } from '../utils/apiResponses';
+
+export class ApiError extends Error {
+    constructor(errorResponse) {
+        super(errorResponse.message);
+        Object.assign(this, errorResponse);
+        this.name = 'ApiError';
+    }
+}
+
+export const chatService = {
+    async sendMessage(message) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT_MS);
+
+        try {
+            const response = await fetch(API_CONFIG.HR_DONNA_FULL_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ message }),
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            // Check if the response is empty
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new ApiError({
+                    status: ResponseStatus.ERROR,
+                    message: 'Invalid response format: Server did not return JSON',
+                    code: 'INVALID_RESPONSE_FORMAT',
+                    details: `Received content-type: ${contentType || 'none'}`
+                });
+            }
+
+            let data;
+            try {
+                const text = await response.text();
+                if (!text) {
+                    throw new Error('Empty response');
+                }
+                data = JSON.parse(text);
+            } catch (error) {
+                throw new ApiError({
+                    status: ResponseStatus.ERROR,
+                    message: 'Failed to parse server response',
+                    code: 'PARSE_ERROR',
+                    details: error.message,
+                    suggestions: ['Please try again', 'Contact support if the issue persists']
+                });
+            }
+
+            // If response is not ok, the data might contain error details
+            if (!response.ok) {
+                throw new ApiError(getErrorMessage({
+                    response: data,
+                    status: response.status
+                }));
+            }
+
+            // Parse successful response
+            const parsedResponse = parseApiResponse(data);
+
+            // Even with a 200 status, the API might indicate an error in the response body
+            if (parsedResponse.status === ResponseStatus.ERROR) {
+                throw new ApiError(parsedResponse);
+            }
+
+            return parsedResponse;
+        } catch (error) {
+            // If it's already an ApiError, rethrow it
+            if (error instanceof ApiError) {
+                throw error;
+            }
+
+            // Handle other types of errors (network, timeout, etc.)
+            throw new ApiError(getErrorMessage(error));
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+};
