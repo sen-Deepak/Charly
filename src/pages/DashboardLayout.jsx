@@ -171,7 +171,7 @@ function DashboardLayout() {
 
       {/* Main content */}
       <main className={`flex-1 overflow-y-auto transition-all duration-300 ${expanded ? 'ml-64' : 'ml-20'}`}>
-        <div className="max-w-6xl mx-auto p-6 sm:p-8">
+        <div className="max-w mx-auto  ">
           <Outlet />
         </div>
       </main>

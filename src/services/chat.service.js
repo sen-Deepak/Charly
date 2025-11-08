@@ -1,5 +1,6 @@
 import API_CONFIG from '../config/api.config';
 import { parseApiResponse, getErrorMessage, ResponseStatus } from '../utils/apiResponses';
+import { supabase } from '../supabaseClient';
 
 export class ApiError extends Error {
     constructor(errorResponse) {
@@ -9,19 +10,42 @@ export class ApiError extends Error {
     }
 }
 
+async function getUserSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (!session) throw new Error('No active session');
+    return session;
+}
+
 export const chatService = {
     async sendMessage(message) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT_MS);
 
         try {
+            // Get user session
+            const session = await getUserSession();
+            const { user } = session;
+
+            // Prepare request payload with user context
+            const payload = {
+                message,
+                user: {
+                    email: user.email,
+                    id: user.id,
+                    user_metadata: user.user_metadata
+                },
+                timestamp: new Date().toISOString()
+            };
+
             const response = await fetch(API_CONFIG.HR_DONNA_FULL_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`
                 },
-                body: JSON.stringify({ message }),
+                body: JSON.stringify(payload),
                 signal: controller.signal,
             });
 

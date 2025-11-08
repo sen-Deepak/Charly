@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
+import { UserProvider } from './context/UserContext'
 import Login from './pages/Login'
 import DashboardLayout from './pages/DashboardLayout'
 import Chat from './pages/Chat'

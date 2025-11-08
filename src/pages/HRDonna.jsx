@@ -10,12 +10,7 @@ export default function HRDonna() {
   // Enhanced error and status handling
   const [error, setError] = useState(null);
   const [apiStatus, setApiStatus] = useState(null);
-  const [messages, setMessages] = useState([
-    {
-      type: 'bot',
-      content: 'Hi! I am HR Donna. How can I help you today?'
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -71,22 +66,26 @@ export default function HRDonna() {
 
   return (
     <div className="h-full w-full flex items-start justify-start">
-      <div className="w-full max-w-5xl mx-auto h-screen flex flex-col">
+      <div className="w-full max-w mx-auto h-screen flex flex-col bg-gradient-to-br from-[#7DD1D3] to-[#E6FBEB]">
         {/* Chat Header */}
-        <div className="bg-primary p-4 rounded-t-lg">
+        <div className="backdrop-blur-sm bg-transparent p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-secondary-200 flex items-center justify-center">
-              <span className="text-white text-xl">👩</span>
-            </div>
+            <div className="w-10 h-10 rounded-full bg-secondary-200/20 flex items-center justify-center overflow-hidden">
+                  <img
+                  src="HR-Donna.jpg"
+                  alt="Logo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             <div>
-              <h1 className="text-xl font-bold text-white">HR Donna</h1>
-              <p className="text-primary-200 text-sm">AI HR Assistant</p>
+              <h1 className="text-xl font-bold text-black">HR Donna</h1>
             </div>
           </div>
         </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-4">
+  {/* Chat Messages */}
+  <div className="flex-1 overflow-y-auto bg-transparent p-1 space-y-4 scrollbar-hide  max-w-[800px] mx-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+ 
           {messages.map((message, index) => (
             <div
               key={index}
@@ -178,8 +177,8 @@ export default function HRDonna() {
         </div>
 
         {/* Chat Input */}
-        <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-200">
-          <div className="flex gap-2">
+        <form onSubmit={handleSendMessage} className="p-4 backdrop-blur-sm bg-transparent">
+          <div className="flex justify-center gap-2 max-w-[800px] mx-auto">
             <input
               type="text"
               value={inputMessage}
