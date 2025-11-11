@@ -1,5 +1,9 @@
 const API_CONFIG = {
     // Use environment variables with fallback values
+// http://localhost:5678/webhook/hrdonnaAssistant    this is pinecone assistant url
+// http://localhost:5678/webhook/hrdonna             this is pinecone index url
+
+
     N8N_BASE_URL: import.meta.env.VITE_N8N_BASE_URL || 'http://localhost:5678',
     HR_DONNA_WEBHOOK: '/webhook/hrdonna',
     TIMEOUT_MS: 30000, // 30 seconds timeout
