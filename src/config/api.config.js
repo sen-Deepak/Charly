@@ -24,14 +24,17 @@ function resolveN8nBaseUrl() {
     // Fallback for non-browser environments
     return `http://localhost:${DEFAULT_N8N_PORT}`;
 }
-
+//webhook for pinecone index agent- http://localhost:5678/webhook/hrdonna
+//webhook for pinecode inbuild agent- http://localhost:5678/webhook/hrdonnaAssistant
 const API_CONFIG = {
     N8N_BASE_URL: resolveN8nBaseUrl(),
     HR_DONNA_WEBHOOK: '/webhook/hrdonna',
-    TIMEOUT_MS: 30000, // 30 seconds timeout
+    GAJODHAR_WEBHOOK: '/webhook/MemerAgentGajodhar', // For Gajodhar chat agent
+    TIMEOUT_MS: 180000, // INCREASED: 180 seconds timeout
 };
 
-// Construct full webhook URL
+// Construct full webhook URLs
 API_CONFIG.HR_DONNA_FULL_URL = `${API_CONFIG.N8N_BASE_URL}${API_CONFIG.HR_DONNA_WEBHOOK}`;
+API_CONFIG.GAJODHAR_FULL_URL = `${API_CONFIG.N8N_BASE_URL}${API_CONFIG.GAJODHAR_WEBHOOK}`; // NEW
 
 export default API_CONFIG;

@@ -18,7 +18,20 @@ async function getUserSession() {
 }
 
 export const chatService = {
+    /**
+     * For HR Donna agent (existing logic, don't touch)
+     */
     async sendMessage(message) {
+        return chatService.sendAgentMessage({
+            message,
+            url: API_CONFIG.HR_DONNA_FULL_URL,
+        });
+    },
+
+    /**
+     * For other chat agents, allows custom webhook URL
+     */
+    async sendAgentMessage({ message, url }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT_MS);
 
@@ -38,7 +51,7 @@ export const chatService = {
                 timestamp: new Date().toISOString()
             };
 
-            const response = await fetch(API_CONFIG.HR_DONNA_FULL_URL, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,5 +120,5 @@ export const chatService = {
         } finally {
             clearTimeout(timeoutId);
         }
-    }
+    },
 };
