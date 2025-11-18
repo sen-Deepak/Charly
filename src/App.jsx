@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Reporting from './pages/Reporting'
 import Training from './pages/Training'
 import HRDonna from './pages/HRDonna'
+import Gajodhar from './pages/Gajodhar'
 
 function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true)
@@ -70,6 +71,7 @@ function App() {
           <Route path="hr-donna" element={<HRDonna />} />
           <Route path="reporting" element={<Reporting />} />
           <Route path="training" element={<Training />} />
+          <Route path="gajodhar" element={<Gajodhar />} />
         </Route>
         <Route path="*" element={<Navigate to="/chat" replace />} />
       </Routes>
