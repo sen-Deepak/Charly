@@ -7,17 +7,47 @@ import remarkGfm from "remark-gfm";
 
 const BOT_AVATAR = "gajodhar.jpg";
 const USER_AVATAR = null;
+const CHAT_STORAGE_KEY = "gajodhar_chat_history";
+
+const loadStoredMessages = () => {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = window.localStorage.getItem(CHAT_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (err) {
+    console.error("Failed to load chat history", err);
+    return [];
+  }
+};
+
+const saveMessagesToStorage = (messages) => {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  } catch (err) {
+    console.error("Failed to save chat history", err);
+  }
+};
 
 function Gajodhar() {
-  const [messages, setMessages] = useState([]); // Make initial state empty
+  const [messages, setMessages] = useState(() => loadStoredMessages());
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hoveredMsgIdx, setHoveredMsgIdx] = useState(null);
   const messagesEndRef = useRef(null);
+  const hasHydratedRef = useRef(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) {
+      hasHydratedRef.current = true;
+      return;
+    }
+    saveMessagesToStorage(messages);
   }, [messages]);
 
   const handleInputChange = (e) => setInput(e.target.value);
@@ -70,9 +100,7 @@ function Gajodhar() {
   };
 
   const handleRefresh = () => {
-    setMessages([
-      { text: "Chat refreshed. Welcome again to Gajodhar chat!", sender: "system" },
-    ]);
+    setMessages([]);
     setInput("");
     setError(null);
   };

@@ -26,11 +26,16 @@ function resolveN8nBaseUrl() {
 }
 //webhook for pinecone index agent- http://localhost:5678/webhook/hrdonna
 //webhook for pinecode inbuild agent- http://localhost:5678/webhook/hrdonnaAssistant
+//webhook for memer agent gajodhar- http://localhost:5678/webhook/MemerAgentGajodhar
+//webhook for memer agent gajodhar- http://localhost:5678/webhook/MemerAgentfaster
+
 const API_CONFIG = {
     N8N_BASE_URL: resolveN8nBaseUrl(),
-    HR_DONNA_WEBHOOK: '/webhook/hrdonna',
-    GAJODHAR_WEBHOOK: '/webhook/MemerAgentGajodhar', // For Gajodhar chat agent
-    TIMEOUT_MS: 180000, // INCREASED: 180 seconds timeout
+    HR_DONNA_WEBHOOK: '/webhook/hrdonnaAssistant',
+   // GAJODHAR_WEBHOOK: '/webhook/MemerAgentGajodhar', 
+    GAJODHAR_WEBHOOK: '/webhook/gajodhar-testing', 
+   //  GAJODHAR_WEBHOOK: '/webhook/MemerAgentfaster',
+    TIMEOUT_MS: 180000, // 180 seconds timeout
 };
 
 // Construct full webhook URLs
