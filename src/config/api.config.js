@@ -25,14 +25,17 @@ const API_CONFIG = {
     // Webhook paths (these are appended to N8N_BASE_URL)
     //hr donna pinecone assistant- hrdonnaAssistant
     // hr donna assistant-hrdonna
+    // hr donna v2-hrdonnav2
     //memer agent faster-MemerAgentfaster
     HR_DONNA_WEBHOOK: '/webhook/hrdonna',
+    HR_DONNA_V2_WEBHOOK: '/webhook/hrdonnaAssistant',
     GAJODHAR_WEBHOOK: '/webhook/MemerAgentfaster',
     TIMEOUT_MS: 180000, // 180 seconds timeout
 };
 
 // Construct full webhook URLs
 API_CONFIG.HR_DONNA_FULL_URL = `${API_CONFIG.N8N_BASE_URL}${API_CONFIG.HR_DONNA_WEBHOOK}`;
+API_CONFIG.HR_DONNA_V2_FULL_URL = `${API_CONFIG.N8N_BASE_URL}${API_CONFIG.HR_DONNA_V2_WEBHOOK}`;
 API_CONFIG.GAJODHAR_FULL_URL = `${API_CONFIG.N8N_BASE_URL}${API_CONFIG.GAJODHAR_WEBHOOK}`; // NEW
 
 export default API_CONFIG;

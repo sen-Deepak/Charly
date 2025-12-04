@@ -19,19 +19,23 @@ async function getUserSession() {
 
 export const chatService = {
     /**
-     * For HR Donna agent (existing logic, don't touch)
+     * For HR Donna agent (supports v1 and v2 via version parameter)
      */
-    async sendMessage(message) {
+    async sendMessage(message, version = 'v1', chatId) {
+        const url = version === 'v2' 
+            ? API_CONFIG.HR_DONNA_V2_FULL_URL 
+            : API_CONFIG.HR_DONNA_FULL_URL;
         return chatService.sendAgentMessage({
             message,
-            url: API_CONFIG.HR_DONNA_FULL_URL,
+            chatId,
+            url,
         });
     },
 
     /**
      * For other chat agents, allows custom webhook URL
      */
-    async sendAgentMessage({ message, url }) {
+    async sendAgentMessage({ message, chatId, url }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT_MS);
 
@@ -43,6 +47,7 @@ export const chatService = {
             // Prepare request payload with user context
             const payload = {
                 message,
+                chatId,
                 user: {
                     email: user.email,
                     id: user.id,
