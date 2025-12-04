@@ -160,23 +160,23 @@ function Gajodhar() {
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6 w-[800px] mx-auto bg-transparent">
           {messages.length === 0 ? (
             <WelcomeCards
-              title="Welcome to Gajodhar"
+              title="Welcome Buddy"
               subtitle="How can I help you today?"
-              description="I'm here to answer your questions, provide insights, and more!"
+              description="I'm here to answer your questions, provide insights, and more from the Meme Department!"
               cards={[
                 {
-                  title: "What are the latest updates?",
-                  icon: "🔄",
+                  title: "What’s the content count from last week?",
+                  icon: "📊",
                   gradient: "from-blue-500 to-indigo-500"
                 },
                 {
-                  title: "How do I get started?",
+                  title: "Who produced the most content yesterday?",
                   icon: "🚀",
                   gradient: "from-purple-500 to-pink-500"
                 },
                 {
-                  title: "Tell me something interesting?",
-                  icon: "💡",
+                  title: "How did Nitin Sharma perform last month?",
+                  icon: "📅",
                   gradient: "from-orange-500 to-red-500"
                 }
               ]}

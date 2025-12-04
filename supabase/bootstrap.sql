@@ -19,11 +19,17 @@ CREATE TABLE IF NOT EXISTS public.allowed_users (
 
 -- User profiles
 CREATE TABLE IF NOT EXISTS public.profiles (
-  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email citext UNIQUE NOT NULL,
+  id uuid NOT NULL,
+  email public.citext,
   full_name text,
-  avatar_url text,
-  created_at timestamptz DEFAULT now() NOT NULL
+  role text,
+  created_at timestamptz DEFAULT now(),
+  position text,
+  joining_date date,
+  department text,
+  CONSTRAINT profiles_pkey PRIMARY KEY (id),
+  CONSTRAINT profiles_email_key UNIQUE (email),
+  CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- User activity tracking

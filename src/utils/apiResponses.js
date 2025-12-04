@@ -54,15 +54,6 @@ export const parseApiResponse = (response) => {
         suggestions: suggestions || error?.suggestions,
         metadata: metadata || null
     };
-
-    return {
-        status: status || (error ? ResponseStatus.ERROR : ResponseStatus.SUCCESS),
-        message: message || responseText || error?.message,
-        code: code || error?.code,
-        details: details || error?.details,
-        suggestions: suggestions || error?.suggestions,
-        metadata: metadata || null
-    };
 };
 
 // Get appropriate message based on error type

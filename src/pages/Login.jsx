@@ -77,7 +77,7 @@ function Login() {
       })
       if (logError) console.error('log_login:', logError)
 
-      window.location.href = '/chat'
+      window.location.href = '/profile'
     } catch (err) {
       console.error('Error verifying OTP:', err)
       const msg = (err.message || '').toLowerCase()
