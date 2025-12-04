@@ -106,8 +106,8 @@ function Gajodhar() {
   };
 
   return (
-    <div className="h-full w-full flex items-start justify-center bg-gradient-to-br from-sky-50 via-white to-purple-100 min-h-screen">
-      <div className="w-full max-w mx-auto h-screen flex flex-col bg-gradient-to-br from-white/80 to-blue-50/60 shadow-2xl ">
+    <div className="h-full w-full flex items-start justify-center bg-transparent min-h-screen">
+      <div className="w-full max-w mx-auto h-screen flex flex-col bg-gradient-to-br from-[#DAE2F8] via-white to-[#D6A4A4] shadow-2xl ">
         {/* Chat Header */}
        <div className="flex flex-row items-center justify-between p-4  bg-transparent ">
           <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ function Gajodhar() {
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 w-[800px] mx-auto bg-transparent">
+        <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6 w-[800px] mx-auto bg-transparent">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-4 opacity-70">
               <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Welcome to Gajodhar</h2>
@@ -239,6 +239,13 @@ function Gajodhar() {
           100% { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn, .animate-fade-in { animation: fade-in 0.2s cubic-bezier(0.49,0.41,0.53,0.95); }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
     </div>
   );

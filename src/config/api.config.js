@@ -5,36 +5,29 @@
 // it will be used unchanged. Otherwise we attempt to build a runtime URL
 // that points to the same host serving the frontend on a configurable port.
 
-const DEFAULT_N8N_PORT = import.meta.env.VITE_N8N_PORT || '5678';
+const DEFAULT_N8N_BASE_URL =
+    (import.meta.env && import.meta.env.VITE_N8N_BASE_URL) ||
+    'https://n8n.srv1171882.hstgr.cloud';
 
 function resolveN8nBaseUrl() {
-    // If the developer explicitly provided a base URL, use it.
-    const envUrl = import.meta.env.VITE_N8N_BASE_URL;
-    if (envUrl && envUrl !== '') return envUrl;
+    // Always use the explicit base URL (env or the production default),
+    // and normalize away any trailing slashes.
+    const envUrl = DEFAULT_N8N_BASE_URL;
+    if (envUrl && envUrl !== '') return envUrl.replace(/\/+$/, '');
 
-    // When running in a browser (dev server accessed remotely), construct
-    // a base URL using the current window hostname so requests go to the
-    // same host that served the frontend (instead of the client's localhost).
-    if (typeof window !== 'undefined' && window.location) {
-        const protocol = window.location.protocol || 'http:';
-        const hostname = window.location.hostname;
-        return `${protocol}//${hostname}:${DEFAULT_N8N_PORT}`;
-    }
-
-    // Fallback for non-browser environments
-    return `http://localhost:${DEFAULT_N8N_PORT}`;
+    // Previous localhost / dynamic-hostname resolution has been removed
+    // in favor of a fixed, production-ready base URL.
+    return DEFAULT_N8N_BASE_URL.replace(/\/+$/, '');
 }
-//webhook for pinecone index agent- http://localhost:5678/webhook/hrdonna
-//webhook for pinecode inbuild agent- http://localhost:5678/webhook/hrdonnaAssistant
-//webhook for memer agent gajodhar- http://localhost:5678/webhook/MemerAgentGajodhar
-//webhook for memer agent gajodhar- http://localhost:5678/webhook/MemerAgentfaster
 
 const API_CONFIG = {
     N8N_BASE_URL: resolveN8nBaseUrl(),
-    HR_DONNA_WEBHOOK: '/webhook/hrdonnaAssistant',
-   // GAJODHAR_WEBHOOK: '/webhook/MemerAgentGajodhar', 
-    GAJODHAR_WEBHOOK: '/webhook/gajodhar-testing', 
-   //  GAJODHAR_WEBHOOK: '/webhook/MemerAgentfaster',
+    // Webhook paths (these are appended to N8N_BASE_URL)
+    //hr donna pinecone assistant- hrdonnaAssistant
+    // hr donna assistant-hrdonna
+    //memer agent faster-MemerAgentfaster
+    HR_DONNA_WEBHOOK: '/webhook/hrdonna',
+    GAJODHAR_WEBHOOK: '/webhook/MemerAgentfaster',
     TIMEOUT_MS: 180000, // 180 seconds timeout
 };
 

@@ -146,7 +146,7 @@ that help you think bigger and achieve more.
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder="you@example.com"
+                    placeholder="you@creativefuel.io"
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400
                                focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition"
                     autoComplete="email"
@@ -270,8 +270,11 @@ that help you think bigger and achieve more.
               
             </button>
 
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Help</h3>
-            <p className="text-gray-600">hii how can i help you</p>
+           <p className="text-gray-600">
+  Connect to Admin <br />
+  📧 deepak@creativeful.io
+</p>
+
           </div>
         </div>
       )}
