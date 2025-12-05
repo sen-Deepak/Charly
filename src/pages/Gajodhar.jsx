@@ -9,7 +9,7 @@ import ChatMessage from "../components/Chat/ChatMessage";
 import SearchBar from "../components/Chat/SearchBar";
 import SendButton from "../components/Chat/SendButton";
 
-const BOT_AVATAR = "/gajodhar.jpg";
+const BOT_AVATAR = "https://ibb.co/4R7Z2tMm";
 const USER_AVATAR = null;
 const CHAT_ID_STORAGE_KEY = "gajodharChatId";
 const CHAT_STORAGE_KEY = "gajodhar_chat_history";
@@ -149,10 +149,10 @@ function Gajodhar() {
         {/* Chat Header */}
         <ChatHeader
           botName="Gajodhar"
-          botImage="/Gajodhar.jpg"
+          botImage="https://ibb.co/4R7Z2tMm"
           subtitle="AI Assistant"
           showVerificationBadge={true}
-          onNewChat={handleRefresh}
+          onNewChat={clearChat}
           isLoading={isLoading}
         />
 
@@ -198,7 +198,7 @@ function Gajodhar() {
                   suggestions={null}
                   details={null}
                   isError={msg.sender === "error"}
-                  botImage={isUser ? null : "/Gajodhar.jpg"}
+                  botImage={isUser ? null : "https://ibb.co/4R7Z2tMm"}
                   responseTime={msg.responseTime || null}
                 />
               );
