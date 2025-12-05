@@ -142,7 +142,7 @@ export default function HRDonna() {
         {/* Chat Header */}
         <ChatHeader
           botName="HR Donna"
-          botImage="https://ibb.co/5g9rD8yR"
+          botImage="https://i.ibb.co/BVF5synS/HR-Donna.jpg"
           subtitle="AI Assistant"
           showVerificationBadge={true}
           onNewChat={clearChat}
@@ -191,7 +191,7 @@ export default function HRDonna() {
                 suggestions={message.suggestions}
                 details={message.details}
                 isError={message.error}
-                botImage="https://ibb.co/5g9rD8yR"
+                botImage="https://i.ibb.co/BVF5synS/HR-Donna.jpg"
               />
             ))
           )}

@@ -149,7 +149,7 @@ function Gajodhar() {
         {/* Chat Header */}
         <ChatHeader
           botName="Gajodhar"
-          botImage="https://ibb.co/4R7Z2tMm"
+          botImage="https://i.ibb.co/5h1TwgjV/Gajodhar.jpg"
           subtitle="AI Assistant"
           showVerificationBadge={true}
           onNewChat={clearChat}
@@ -198,7 +198,7 @@ function Gajodhar() {
                   suggestions={null}
                   details={null}
                   isError={msg.sender === "error"}
-                  botImage={isUser ? null : "https://ibb.co/4R7Z2tMm"}
+                  botImage={isUser ? null : "https://i.ibb.co/5h1TwgjV/Gajodhar.jpg"}
                   responseTime={msg.responseTime || null}
                 />
               );

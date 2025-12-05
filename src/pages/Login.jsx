@@ -102,7 +102,7 @@ function Login() {
           {/* Logo (top-left) */}
           <div className="self-start">
             <img
-              src="https://ibb.co/jZBcd7jR"
+              src="https://i.ibb.co/1gFytnT/full-white-logo.png"
               alt="Creative Fuel Logo"
               className="w-32 sm:w-40 md:w-44 h-auto object-contain"
             />
