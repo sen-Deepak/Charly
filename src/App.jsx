@@ -3,10 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Login from './pages/Login'
 import DashboardLayout from './pages/DashboardLayout'
-import Chat from './pages/Chat'
 import Profile from './pages/Profile'
-import Reporting from './pages/Reporting'
-import Training from './pages/Training'
 import HRDonna from './pages/HRDonna'
 import Gajodhar from './pages/Gajodhar'
 
@@ -64,15 +61,12 @@ function App() {
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/chat" replace />} />
-          <Route path="chat" element={<Chat />} />
+          <Route index element={<Navigate to="/profile" replace />} />
           <Route path="profile" element={<Profile />} />
           <Route path="hr-donna" element={<HRDonna />} />
-          <Route path="reporting" element={<Reporting />} />
-          <Route path="training" element={<Training />} />
           <Route path="gajodhar" element={<Gajodhar />} />
         </Route>
-        <Route path="*" element={<Navigate to="/chat" replace />} />
+        <Route path="*" element={<Navigate to="/profile" replace />} />
       </Routes>
     </BrowserRouter>
   )

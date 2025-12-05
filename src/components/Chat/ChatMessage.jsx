@@ -38,7 +38,7 @@ export default function ChatMessage({
           <div className="w-8 h-8 rounded-full bg-secondary-200/20 flex items-center justify-center overflow-hidden shadow-lg">
             {botImage ? (
               <img
-                src={botImage.startsWith('/') ? botImage : `/${botImage}`}
+                src={botImage.startsWith('http') ? botImage : (botImage.startsWith('/') ? botImage : `/${botImage}`)}
                 alt="Bot"
                 className="w-full h-full object-cover"
               />

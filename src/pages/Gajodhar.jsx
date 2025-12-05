@@ -152,7 +152,7 @@ function Gajodhar() {
           botImage="https://i.ibb.co/5h1TwgjV/Gajodhar.jpg"
           subtitle="AI Assistant"
           showVerificationBadge={true}
-          onNewChat={clearChat}
+          onNewChat={handleNewChat}
           isLoading={isLoading}
         />
 
@@ -206,7 +206,7 @@ function Gajodhar() {
           )}
           {isLoading && (
             <div className="flex gap-3 mt-4 items-end">
-              <img src={BOT_AVATAR} className="w-8 h-8 rounded-full object-cover shadow" alt="..." />
+              <img src="https://i.ibb.co/5h1TwgjV/Gajodhar.jpg" className="w-8 h-8 rounded-full object-cover shadow" alt="Gajodhar typing" />
               <div className="bg-white/70 text-gray-500 px-6 py-3 rounded-2xl rounded-tl-none shadow animate-pulse max-w-[70%] transition">Gajodhar is typing...</div>
             </div>
           )}
