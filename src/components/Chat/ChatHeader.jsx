@@ -21,7 +21,7 @@ export default function ChatHeader({
           <div className="relative w-10 h-10 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 p-[2px] shadow-lg">
             <div className="w-full h-full rounded-full overflow-hidden ring-2 ring-white">
               <img
-                src={botImage}
+                src={botImage.startsWith('/') ? botImage : `/${botImage}`}
                 alt={botName}
                 className="w-full h-full object-cover"
               />

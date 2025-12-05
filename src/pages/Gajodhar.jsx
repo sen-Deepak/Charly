@@ -9,7 +9,7 @@ import ChatMessage from "../components/Chat/ChatMessage";
 import SearchBar from "../components/Chat/SearchBar";
 import SendButton from "../components/Chat/SendButton";
 
-const BOT_AVATAR = "gajodhar.jpg";
+const BOT_AVATAR = "/gajodhar.jpg";
 const USER_AVATAR = null;
 const CHAT_ID_STORAGE_KEY = "gajodharChatId";
 const CHAT_STORAGE_KEY = "gajodhar_chat_history";
@@ -147,9 +147,9 @@ function Gajodhar() {
     <div className="h-full w-full flex items-start justify-center bg-transparent min-h-screen">
       <div className="w-full max-w mx-auto h-screen flex flex-col bg-gradient-to-br from-[#DAE2F8] via-white to-[#D6A4A4] shadow-2xl ">
         {/* Chat Header */}
-       <ChatHeader
+        <ChatHeader
           botName="Gajodhar"
-          botImage="Gajodhar.jpg"
+          botImage="/Gajodhar.jpg"
           subtitle="AI Assistant"
           showVerificationBadge={true}
           onNewChat={handleRefresh}
@@ -198,7 +198,7 @@ function Gajodhar() {
                   suggestions={null}
                   details={null}
                   isError={msg.sender === "error"}
-                  botImage={isUser ? null : "Gajodhar.jpg"}
+                  botImage={isUser ? null : "/Gajodhar.jpg"}
                   responseTime={msg.responseTime || null}
                 />
               );
