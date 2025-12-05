@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 
 function Login() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [otpCode, setOtpCode] = useState('')
   const [step, setStep] = useState(1) // 1: enter email, 2: verify OTP
@@ -77,7 +79,7 @@ function Login() {
       })
       if (logError) console.error('log_login:', logError)
 
-      window.location.href = '/profile'
+      navigate('/profile')
     } catch (err) {
       console.error('Error verifying OTP:', err)
       const msg = (err.message || '').toLowerCase()
